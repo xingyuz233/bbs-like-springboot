@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TopicMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.Topic">
+    <id column="topic_id" jdbcType="INTEGER" property="topicId" />
+    <result column="topic_title" jdbcType="VARCHAR" property="topicTitle" />
+    <result column="topic_content" jdbcType="VARCHAR" property="topicContent" />
+    <result column="topic_modify_time" jdbcType="TIMESTAMP" property="topicModifyTime" />
+    <result column="topic_publish_time" jdbcType="TIMESTAMP" property="topicPublishTime" />
+    <result column="topic_user_phone" jdbcType="VARCHAR" property="topicUserPhone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    topic_id, topic_title, topic_content, topic_modify_time, topic_publish_time, topic_user_phone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from topic
+    where topic_id = #{topicId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllTopics" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from topic
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from topic
+    where topic_id = #{topicId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.model.Topic">
+    insert into topic (topic_id, topic_title, topic_content, 
+      topic_modify_time, topic_publish_time, 
+      topic_user_phone)
+    values (#{topicId,jdbcType=INTEGER}, #{topicTitle,jdbcType=VARCHAR}, #{topicContent,jdbcType=VARCHAR}, 
+      #{topicModifyTime,jdbcType=TIMESTAMP}, #{topicPublishTime,jdbcType=TIMESTAMP}, 
+      #{topicUserPhone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.model.Topic">
+    insert into topic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="topicId != null">
+        topic_id,
+      </if>
+      <if test="topicTitle != null">
+        topic_title,
+      </if>
+      <if test="topicContent != null">
+        topic_content,
+      </if>
+      <if test="topicModifyTime != null">
+        topic_modify_time,
+      </if>
+      <if test="topicPublishTime != null">
+        topic_publish_time,
+      </if>
+      <if test="topicUserPhone != null">
+        topic_user_phone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="topicId != null">
+        #{topicId,jdbcType=INTEGER},
+      </if>
+      <if test="topicTitle != null">
+        #{topicTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="topicContent != null">
+        #{topicContent,jdbcType=VARCHAR},
+      </if>
+      <if test="topicModifyTime != null">
+        #{topicModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicPublishTime != null">
+        #{topicPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicUserPhone != null">
+        #{topicUserPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.Topic">
+    update topic
+    <set>
+      <if test="topicTitle != null">
+        topic_title = #{topicTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="topicContent != null">
+        topic_content = #{topicContent,jdbcType=VARCHAR},
+      </if>
+      <if test="topicModifyTime != null">
+        topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicPublishTime != null">
+        topic_publish_time = #{topicPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicUserPhone != null">
+        topic_user_phone = #{topicUserPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where topic_id = #{topicId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Topic">
+    update topic
+    set topic_title = #{topicTitle,jdbcType=VARCHAR},
+      topic_content = #{topicContent,jdbcType=VARCHAR},
+      topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      topic_publish_time = #{topicPublishTime,jdbcType=TIMESTAMP},
+      topic_user_phone = #{topicUserPhone,jdbcType=VARCHAR}
+    where topic_id = #{topicId,jdbcType=INTEGER}
+  </update>
+</mapper>

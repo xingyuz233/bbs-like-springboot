@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ReplyMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.Reply">
+    <id column="reply_id" jdbcType="INTEGER" property="replyId" />
+    <result column="reply_content" jdbcType="VARCHAR" property="replyContent" />
+    <result column="reply_modify_time" jdbcType="TIMESTAMP" property="replyModifyTime" />
+    <result column="reply_publish_time" jdbcType="TIMESTAMP" property="replyPublishTime" />
+    <result column="reply_user_phone" jdbcType="VARCHAR" property="replyUserPhone" />
+    <result column="reply_topic_id" jdbcType="INTEGER" property="replyTopicId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    reply_id, reply_content, reply_modify_time, reply_publish_time, reply_user_phone, 
+    reply_topic_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from reply
+    where reply_id = #{replyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reply
+    where reply_id = #{replyId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.model.Reply">
+    insert into reply (reply_id, reply_content, reply_modify_time, 
+      reply_publish_time, reply_user_phone, reply_topic_id
+      )
+    values (#{replyId,jdbcType=INTEGER}, #{replyContent,jdbcType=VARCHAR}, #{replyModifyTime,jdbcType=TIMESTAMP}, 
+      #{replyPublishTime,jdbcType=TIMESTAMP}, #{replyUserPhone,jdbcType=VARCHAR}, #{replyTopicId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.model.Reply">
+    insert into reply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="replyId != null">
+        reply_id,
+      </if>
+      <if test="replyContent != null">
+        reply_content,
+      </if>
+      <if test="replyModifyTime != null">
+        reply_modify_time,
+      </if>
+      <if test="replyPublishTime != null">
+        reply_publish_time,
+      </if>
+      <if test="replyUserPhone != null">
+        reply_user_phone,
+      </if>
+      <if test="replyTopicId != null">
+        reply_topic_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="replyId != null">
+        #{replyId,jdbcType=INTEGER},
+      </if>
+      <if test="replyContent != null">
+        #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="replyModifyTime != null">
+        #{replyModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyPublishTime != null">
+        #{replyPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyUserPhone != null">
+        #{replyUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTopicId != null">
+        #{replyTopicId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.Reply">
+    update reply
+    <set>
+      <if test="replyContent != null">
+        reply_content = #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="replyModifyTime != null">
+        reply_modify_time = #{replyModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyPublishTime != null">
+        reply_publish_time = #{replyPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyUserPhone != null">
+        reply_user_phone = #{replyUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="replyTopicId != null">
+        reply_topic_id = #{replyTopicId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where reply_id = #{replyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Reply">
+    update reply
+    set reply_content = #{replyContent,jdbcType=VARCHAR},
+      reply_modify_time = #{replyModifyTime,jdbcType=TIMESTAMP},
+      reply_publish_time = #{replyPublishTime,jdbcType=TIMESTAMP},
+      reply_user_phone = #{replyUserPhone,jdbcType=VARCHAR},
+      reply_topic_id = #{replyTopicId,jdbcType=INTEGER}
+    where reply_id = #{replyId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.RelationMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.Relation">
+    <id column="bottom_user" jdbcType="VARCHAR" property="bottomUser" />
+    <id column="top_user" jdbcType="VARCHAR" property="topUser" />
+    <result column="follow_state" jdbcType="BIT" property="followState" />
+    <result column="block_state" jdbcType="BIT" property="blockState" />
+    <result column="friend_state" jdbcType="BIT" property="friendState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bottom_user, top_user, follow_state, block_state, friend_state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.example.demo.model.RelationKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from relation
+    where bottom_user = #{bottomUser,jdbcType=VARCHAR}
+      and top_user = #{topUser,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.example.demo.model.RelationKey">
+    delete from relation
+    where bottom_user = #{bottomUser,jdbcType=VARCHAR}
+      and top_user = #{topUser,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.model.Relation">
+    insert into relation (bottom_user, top_user, follow_state, 
+      block_state, friend_state)
+    values (#{bottomUser,jdbcType=VARCHAR}, #{topUser,jdbcType=VARCHAR}, #{followState,jdbcType=BIT}, 
+      #{blockState,jdbcType=BIT}, #{friendState,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.model.Relation">
+    insert into relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bottomUser != null">
+        bottom_user,
+      </if>
+      <if test="topUser != null">
+        top_user,
+      </if>
+      <if test="followState != null">
+        follow_state,
+      </if>
+      <if test="blockState != null">
+        block_state,
+      </if>
+      <if test="friendState != null">
+        friend_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bottomUser != null">
+        #{bottomUser,jdbcType=VARCHAR},
+      </if>
+      <if test="topUser != null">
+        #{topUser,jdbcType=VARCHAR},
+      </if>
+      <if test="followState != null">
+        #{followState,jdbcType=BIT},
+      </if>
+      <if test="blockState != null">
+        #{blockState,jdbcType=BIT},
+      </if>
+      <if test="friendState != null">
+        #{friendState,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.Relation">
+    update relation
+    <set>
+      <if test="followState != null">
+        follow_state = #{followState,jdbcType=BIT},
+      </if>
+      <if test="blockState != null">
+        block_state = #{blockState,jdbcType=BIT},
+      </if>
+      <if test="friendState != null">
+        friend_state = #{friendState,jdbcType=BIT},
+      </if>
+    </set>
+    where bottom_user = #{bottomUser,jdbcType=VARCHAR}
+      and top_user = #{topUser,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Relation">
+    update relation
+    set follow_state = #{followState,jdbcType=BIT},
+      block_state = #{blockState,jdbcType=BIT},
+      friend_state = #{friendState,jdbcType=BIT}
+    where bottom_user = #{bottomUser,jdbcType=VARCHAR}
+      and top_user = #{topUser,jdbcType=VARCHAR}
+  </update>
+</mapper>
