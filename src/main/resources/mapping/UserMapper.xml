@@ -24,6 +24,16 @@
     from user
     where user_phone = #{userPhone,jdbcType=VARCHAR}
   </select>
+  <select id="selectAllUsers" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+  </select>
+  <select id="selectLimitUsers" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user limit #{offset},#{limit}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from user
     where user_phone = #{userPhone,jdbcType=VARCHAR}

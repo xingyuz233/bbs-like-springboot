@@ -18,6 +18,39 @@
     where bottom_user = #{bottomUser,jdbcType=VARCHAR}
       and top_user = #{topUser,jdbcType=VARCHAR}
   </select>
+  <select id="selectFollowingsByTopUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from relation
+    where top_user = #{topUser,jdbcType=VARCHAR}
+      and follow_state = true
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectFollowersByBottomUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from relation
+    where bottom_user = #{bottomUser,jdbcType=VARCHAR}
+      and follow_state = true
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectBlocksByTopUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from relation
+    where top_user = #{topUser,jdbcType=VARCHAR}
+      and block_state = true
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectFriendsByTopUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from relation
+    where top_user = #{topUser,jdbcType=VARCHAR}
+      and friend_state = true
+    limit #{offset},#{limit}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="com.example.demo.model.RelationKey">
     delete from relation
     where bottom_user = #{bottomUser,jdbcType=VARCHAR}

@@ -10,4 +10,6 @@ public interface UserService {
 
     User getUser(String phone);
 
+    List<User> getLimitUsers(Integer offset, Integer limit);
+
 }

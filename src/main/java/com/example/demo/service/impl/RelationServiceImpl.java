@@ -9,6 +9,7 @@ import com.example.demo.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,13 +23,13 @@ public class RelationServiceImpl implements RelationService {
 
 
     @Override
-    public int block(String topic_userPhone, String bottom_userPhone) {
-        User topic_user = userMapper.selectByPrimaryKey(topic_userPhone);
+    public int block(String top_userPhone, String bottom_userPhone) {
+        User top_user = userMapper.selectByPrimaryKey(top_userPhone);
         User bottom_user = userMapper.selectByPrimaryKey(bottom_userPhone);
-        if (topic_user != null && bottom_user != null) {
+        if (top_user != null && bottom_user != null) {
 
             RelationKey relationKey = new RelationKey();
-            relationKey.setTopUser(topic_userPhone);
+            relationKey.setTopUser(top_userPhone);
             relationKey.setBottomUser(bottom_userPhone);
 
             Relation relation = relationMapper.selectByPrimaryKey(relationKey);
@@ -37,7 +38,7 @@ public class RelationServiceImpl implements RelationService {
                 return relationMapper.updateByPrimaryKeySelective(relation);
             } else {
                 relation = new Relation();
-                relation.setTopUser(topic_userPhone);
+                relation.setTopUser(top_userPhone);
                 relation.setBottomUser(bottom_userPhone);
                 relation.setBlockState(true);
                 return relationMapper.insertSelective(relation);
@@ -48,13 +49,13 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public int unblock(String topic_userPhone, String bottom_userPhone) {
-        User topic_user = userMapper.selectByPrimaryKey(topic_userPhone);
+    public int unBlock(String top_userPhone, String bottom_userPhone) {
+        User top_user = userMapper.selectByPrimaryKey(top_userPhone);
         User bottom_user = userMapper.selectByPrimaryKey(bottom_userPhone);
-        if (topic_user != null && bottom_user != null) {
+        if (top_user != null && bottom_user != null) {
 
             RelationKey relationKey = new RelationKey();
-            relationKey.setTopUser(topic_userPhone);
+            relationKey.setTopUser(top_userPhone);
             relationKey.setBottomUser(bottom_userPhone);
 
             Relation relation = relationMapper.selectByPrimaryKey(relationKey);
@@ -73,23 +74,97 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public int follow(String topic_userPhone, String bottom_userPhone) {
+    public int follow(String top_userPhone, String bottom_userPhone) {
+        User top_user = userMapper.selectByPrimaryKey(top_userPhone);
+        User bottom_user = userMapper.selectByPrimaryKey(bottom_userPhone);
+        if (top_user != null && bottom_user != null) {
 
+            // 更新user
+            top_user.setUserFollowingCount(top_user.getUserFollowingCount() + 1);
+            bottom_user.setUserFollowersCount(bottom_user.getUserFollowersCount() + 1);
+            userMapper.updateByPrimaryKeySelective(top_user);
+            userMapper.updateByPrimaryKeySelective(bottom_user);
+
+
+            // 更新relation
+            RelationKey relationKey = new RelationKey();
+            relationKey.setTopUser(top_userPhone);
+            relationKey.setBottomUser(bottom_userPhone);
+
+            Relation relation = relationMapper.selectByPrimaryKey(relationKey);
+
+            if (relation != null) {
+                relation.setFollowState(true);
+                return relationMapper.updateByPrimaryKeySelective(relation);
+            } else {
+                relation = new Relation();
+                relation.setTopUser(top_userPhone);
+                relation.setBottomUser(bottom_userPhone);
+                relation.setFollowState(true);
+                return relationMapper.insertSelective(relation);
+            }
+        }
         return 0;
     }
 
     @Override
-    public int unfollow(String topic_userPhone, String bottom_userPhone) {
+    public int unFollow(String top_userPhone, String bottom_userPhone) {
+        User top_user = userMapper.selectByPrimaryKey(top_userPhone);
+        User bottom_user = userMapper.selectByPrimaryKey(bottom_userPhone);
+        if (top_user != null && bottom_user != null) {
+
+            // 更新user
+            top_user.setUserFollowingCount(top_user.getUserFollowingCount() - 1);
+            bottom_user.setUserFollowersCount(bottom_user.getUserFollowersCount() - 1);
+            userMapper.updateByPrimaryKeySelective(top_user);
+            userMapper.updateByPrimaryKeySelective(bottom_user);
+
+            RelationKey relationKey = new RelationKey();
+            relationKey.setTopUser(top_userPhone);
+            relationKey.setBottomUser(bottom_userPhone);
+
+            Relation relation = relationMapper.selectByPrimaryKey(relationKey);
+
+            if (relation != null) {
+                relation.setFollowState(false);
+
+                if (!relation.getFollowState() && !relation.getFriendState()) {
+                    return relationMapper.deleteByPrimaryKey(relationKey);
+                } else {
+                    return relationMapper.updateByPrimaryKeySelective(relation);
+                }
+            }
+        }
         return 0;
     }
 
     @Override
-    public List<User> getFollowingList(String topic_userPhone) {
-        return null;
+    public List<User> getFollowingList(String top_userPhone, Integer offset, Integer limit) {
+        List<Relation> relationList = relationMapper.selectFollowingsByTopUser(top_userPhone, offset, limit);
+        List<User> userList = new ArrayList<>();
+        for (Relation relation: relationList) {
+            userList.add(userMapper.selectByPrimaryKey(relation.getBottomUser()));
+        }
+        return userList;
     }
 
     @Override
-    public List<User> getFollowerList(String bottom_userPhone) {
-        return null;
+    public List<User> getFollowerList(String bottom_userPhone, Integer offset, Integer limit) {
+        List<Relation> relationList = relationMapper.selectFollowingsByTopUser(bottom_userPhone, offset, limit);
+        List<User> userList = new ArrayList<>();
+        for (Relation relation: relationList) {
+            userList.add(userMapper.selectByPrimaryKey(relation.getTopUser()));
+        }
+        return userList;
+    }
+
+    @Override
+    public List<User> getBlockingList(String top_userPhone, Integer offset, Integer limit) {
+        List<Relation> relationList = relationMapper.selectFollowingsByTopUser(top_userPhone, offset, limit);
+        List<User> userList = new ArrayList<>();
+        for (Relation relation: relationList) {
+            userList.add(userMapper.selectByPrimaryKey(relation.getBottomUser()));
+        }
+        return userList;
     }
 }

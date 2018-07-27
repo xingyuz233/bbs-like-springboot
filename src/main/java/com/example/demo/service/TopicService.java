@@ -12,6 +12,9 @@ public interface TopicService {
 
     Topic selectTopic(int topic_id);
 
-    List<Topic> selectAllTopics(int pageNum, int pageSize);
+    int updateTopic(Topic topic);
+
+    List<Topic> getLimitTopics(Integer offset, Integer limit);
+
 
 }

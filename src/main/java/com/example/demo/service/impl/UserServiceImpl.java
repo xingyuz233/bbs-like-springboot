@@ -7,6 +7,8 @@ import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
@@ -21,6 +23,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(String phone) {
         return userMapper.selectByPrimaryKey(phone);
+    }
+
+    @Override
+    public List<User> getLimitUsers(Integer offset, Integer limit) {
+        return userMapper.selectLimitUsers(offset, limit);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.model.Topic;
-import net.sf.jsqlparser.statement.select.Top;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,6 +18,5 @@ public interface TopicMapper {
 
     int updateByPrimaryKey(Topic record);
 
-    List<Topic> selectAllTopics();
-
+    List<Topic> selectLimitTopics(@Param("offset") Integer offset, @Param("limit") Integer limit);
 }

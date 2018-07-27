@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TopicRelationMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.TopicRelation">
+    <id column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <id column="topic_id" jdbcType="INTEGER" property="topicId" />
+    <result column="favorite_state" jdbcType="BIT" property="favoriteState" />
+    <result column="follow_state" jdbcType="BIT" property="followState" />
+    <result column="like_state" jdbcType="BIT" property="likeState" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_phone, topic_id, favorite_state, follow_state, like_state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.example.demo.model.TopicRelationKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from topic_relation
+    where user_phone = #{userPhone,jdbcType=VARCHAR}
+      and topic_id = #{topicId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.example.demo.model.TopicRelationKey">
+    delete from topic_relation
+    where user_phone = #{userPhone,jdbcType=VARCHAR}
+      and topic_id = #{topicId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.model.TopicRelation">
+    insert into topic_relation (user_phone, topic_id, favorite_state, 
+      follow_state, like_state)
+    values (#{userPhone,jdbcType=VARCHAR}, #{topicId,jdbcType=INTEGER}, #{favoriteState,jdbcType=BIT}, 
+      #{followState,jdbcType=BIT}, #{likeState,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.model.TopicRelation">
+    insert into topic_relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="topicId != null">
+        topic_id,
+      </if>
+      <if test="favoriteState != null">
+        favorite_state,
+      </if>
+      <if test="followState != null">
+        follow_state,
+      </if>
+      <if test="likeState != null">
+        like_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="topicId != null">
+        #{topicId,jdbcType=INTEGER},
+      </if>
+      <if test="favoriteState != null">
+        #{favoriteState,jdbcType=BIT},
+      </if>
+      <if test="followState != null">
+        #{followState,jdbcType=BIT},
+      </if>
+      <if test="likeState != null">
+        #{likeState,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.TopicRelation">
+    update topic_relation
+    <set>
+      <if test="favoriteState != null">
+        favorite_state = #{favoriteState,jdbcType=BIT},
+      </if>
+      <if test="followState != null">
+        follow_state = #{followState,jdbcType=BIT},
+      </if>
+      <if test="likeState != null">
+        like_state = #{likeState,jdbcType=BIT},
+      </if>
+    </set>
+    where user_phone = #{userPhone,jdbcType=VARCHAR}
+      and topic_id = #{topicId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.model.TopicRelation">
+    update topic_relation
+    set favorite_state = #{favoriteState,jdbcType=BIT},
+      follow_state = #{followState,jdbcType=BIT},
+      like_state = #{likeState,jdbcType=BIT}
+    where user_phone = #{userPhone,jdbcType=VARCHAR}
+      and topic_id = #{topicId,jdbcType=INTEGER}
+  </update>
+</mapper>

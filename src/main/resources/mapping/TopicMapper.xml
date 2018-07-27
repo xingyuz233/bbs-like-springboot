@@ -4,13 +4,23 @@
   <resultMap id="BaseResultMap" type="com.example.demo.model.Topic">
     <id column="topic_id" jdbcType="INTEGER" property="topicId" />
     <result column="topic_title" jdbcType="VARCHAR" property="topicTitle" />
-    <result column="topic_content" jdbcType="VARCHAR" property="topicContent" />
-    <result column="topic_modify_time" jdbcType="TIMESTAMP" property="topicModifyTime" />
+    <result column="topic_content_md" jdbcType="VARCHAR" property="topicContentMd" />
+    <result column="topic_content_html" jdbcType="VARCHAR" property="topicContentHtml" />
     <result column="topic_publish_time" jdbcType="TIMESTAMP" property="topicPublishTime" />
+    <result column="topic_modify_time" jdbcType="TIMESTAMP" property="topicModifyTime" />
+    <result column="topic_last_reply_time" jdbcType="TIMESTAMP" property="topicLastReplyTime" />
+    <result column="topic_likes" jdbcType="INTEGER" property="topicLikes" />
+    <result column="topic_hits" jdbcType="INTEGER" property="topicHits" />
+    <result column="topic_replies" jdbcType="INTEGER" property="topicReplies" />
+    <result column="topic_deleted" jdbcType="BIT" property="topicDeleted" />
+    <result column="topic_excellent" jdbcType="BIT" property="topicExcellent" />
     <result column="topic_user_phone" jdbcType="VARCHAR" property="topicUserPhone" />
+    <result column="topic_last_reply_user_phone" jdbcType="VARCHAR" property="topicLastReplyUserPhone" />
   </resultMap>
   <sql id="Base_Column_List">
-    topic_id, topic_title, topic_content, topic_modify_time, topic_publish_time, topic_user_phone
+    topic_id, topic_title, topic_content_md, topic_content_html, topic_publish_time, 
+    topic_modify_time, topic_last_reply_time, topic_likes, topic_hits, topic_replies, 
+    topic_deleted, topic_excellent, topic_user_phone, topic_last_reply_user_phone
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -18,22 +28,29 @@
     from topic
     where topic_id = #{topicId,jdbcType=INTEGER}
   </select>
-  <select id="selectAllTopics" resultMap="BaseResultMap">
+  <select id="selectLimitTopics" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from topic
+    limit #{offset},#{limit}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from topic
     where topic_id = #{topicId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.demo.model.Topic">
-    insert into topic (topic_id, topic_title, topic_content, 
-      topic_modify_time, topic_publish_time, 
-      topic_user_phone)
-    values (#{topicId,jdbcType=INTEGER}, #{topicTitle,jdbcType=VARCHAR}, #{topicContent,jdbcType=VARCHAR}, 
-      #{topicModifyTime,jdbcType=TIMESTAMP}, #{topicPublishTime,jdbcType=TIMESTAMP}, 
-      #{topicUserPhone,jdbcType=VARCHAR})
+    insert into topic (topic_id, topic_title, topic_content_md, 
+      topic_content_html, topic_publish_time, topic_modify_time, 
+      topic_last_reply_time, topic_likes, topic_hits, 
+      topic_replies, topic_deleted, topic_excellent, 
+      topic_user_phone, topic_last_reply_user_phone
+      )
+    values (#{topicId,jdbcType=INTEGER}, #{topicTitle,jdbcType=VARCHAR}, #{topicContentMd,jdbcType=VARCHAR}, 
+      #{topicContentHtml,jdbcType=VARCHAR}, #{topicPublishTime,jdbcType=TIMESTAMP}, #{topicModifyTime,jdbcType=TIMESTAMP}, 
+      #{topicLastReplyTime,jdbcType=TIMESTAMP}, #{topicLikes,jdbcType=INTEGER}, #{topicHits,jdbcType=INTEGER}, 
+      #{topicReplies,jdbcType=INTEGER}, #{topicDeleted,jdbcType=BIT}, #{topicExcellent,jdbcType=BIT}, 
+      #{topicUserPhone,jdbcType=VARCHAR}, #{topicLastReplyUserPhone,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.example.demo.model.Topic">
     insert into topic
@@ -44,17 +61,41 @@
       <if test="topicTitle != null">
         topic_title,
       </if>
-      <if test="topicContent != null">
-        topic_content,
+      <if test="topicContentMd != null">
+        topic_content_md,
       </if>
-      <if test="topicModifyTime != null">
-        topic_modify_time,
+      <if test="topicContentHtml != null">
+        topic_content_html,
       </if>
       <if test="topicPublishTime != null">
         topic_publish_time,
       </if>
+      <if test="topicModifyTime != null">
+        topic_modify_time,
+      </if>
+      <if test="topicLastReplyTime != null">
+        topic_last_reply_time,
+      </if>
+      <if test="topicLikes != null">
+        topic_likes,
+      </if>
+      <if test="topicHits != null">
+        topic_hits,
+      </if>
+      <if test="topicReplies != null">
+        topic_replies,
+      </if>
+      <if test="topicDeleted != null">
+        topic_deleted,
+      </if>
+      <if test="topicExcellent != null">
+        topic_excellent,
+      </if>
       <if test="topicUserPhone != null">
         topic_user_phone,
+      </if>
+      <if test="topicLastReplyUserPhone != null">
+        topic_last_reply_user_phone,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -64,17 +105,41 @@
       <if test="topicTitle != null">
         #{topicTitle,jdbcType=VARCHAR},
       </if>
-      <if test="topicContent != null">
-        #{topicContent,jdbcType=VARCHAR},
+      <if test="topicContentMd != null">
+        #{topicContentMd,jdbcType=VARCHAR},
       </if>
-      <if test="topicModifyTime != null">
-        #{topicModifyTime,jdbcType=TIMESTAMP},
+      <if test="topicContentHtml != null">
+        #{topicContentHtml,jdbcType=VARCHAR},
       </if>
       <if test="topicPublishTime != null">
         #{topicPublishTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="topicModifyTime != null">
+        #{topicModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicLastReplyTime != null">
+        #{topicLastReplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicLikes != null">
+        #{topicLikes,jdbcType=INTEGER},
+      </if>
+      <if test="topicHits != null">
+        #{topicHits,jdbcType=INTEGER},
+      </if>
+      <if test="topicReplies != null">
+        #{topicReplies,jdbcType=INTEGER},
+      </if>
+      <if test="topicDeleted != null">
+        #{topicDeleted,jdbcType=BIT},
+      </if>
+      <if test="topicExcellent != null">
+        #{topicExcellent,jdbcType=BIT},
+      </if>
       <if test="topicUserPhone != null">
         #{topicUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="topicLastReplyUserPhone != null">
+        #{topicLastReplyUserPhone,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -84,17 +149,41 @@
       <if test="topicTitle != null">
         topic_title = #{topicTitle,jdbcType=VARCHAR},
       </if>
-      <if test="topicContent != null">
-        topic_content = #{topicContent,jdbcType=VARCHAR},
+      <if test="topicContentMd != null">
+        topic_content_md = #{topicContentMd,jdbcType=VARCHAR},
       </if>
-      <if test="topicModifyTime != null">
-        topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      <if test="topicContentHtml != null">
+        topic_content_html = #{topicContentHtml,jdbcType=VARCHAR},
       </if>
       <if test="topicPublishTime != null">
         topic_publish_time = #{topicPublishTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="topicModifyTime != null">
+        topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicLastReplyTime != null">
+        topic_last_reply_time = #{topicLastReplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="topicLikes != null">
+        topic_likes = #{topicLikes,jdbcType=INTEGER},
+      </if>
+      <if test="topicHits != null">
+        topic_hits = #{topicHits,jdbcType=INTEGER},
+      </if>
+      <if test="topicReplies != null">
+        topic_replies = #{topicReplies,jdbcType=INTEGER},
+      </if>
+      <if test="topicDeleted != null">
+        topic_deleted = #{topicDeleted,jdbcType=BIT},
+      </if>
+      <if test="topicExcellent != null">
+        topic_excellent = #{topicExcellent,jdbcType=BIT},
+      </if>
       <if test="topicUserPhone != null">
         topic_user_phone = #{topicUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="topicLastReplyUserPhone != null">
+        topic_last_reply_user_phone = #{topicLastReplyUserPhone,jdbcType=VARCHAR},
       </if>
     </set>
     where topic_id = #{topicId,jdbcType=INTEGER}
@@ -102,10 +191,18 @@
   <update id="updateByPrimaryKey" parameterType="com.example.demo.model.Topic">
     update topic
     set topic_title = #{topicTitle,jdbcType=VARCHAR},
-      topic_content = #{topicContent,jdbcType=VARCHAR},
-      topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      topic_content_md = #{topicContentMd,jdbcType=VARCHAR},
+      topic_content_html = #{topicContentHtml,jdbcType=VARCHAR},
       topic_publish_time = #{topicPublishTime,jdbcType=TIMESTAMP},
-      topic_user_phone = #{topicUserPhone,jdbcType=VARCHAR}
+      topic_modify_time = #{topicModifyTime,jdbcType=TIMESTAMP},
+      topic_last_reply_time = #{topicLastReplyTime,jdbcType=TIMESTAMP},
+      topic_likes = #{topicLikes,jdbcType=INTEGER},
+      topic_hits = #{topicHits,jdbcType=INTEGER},
+      topic_replies = #{topicReplies,jdbcType=INTEGER},
+      topic_deleted = #{topicDeleted,jdbcType=BIT},
+      topic_excellent = #{topicExcellent,jdbcType=BIT},
+      topic_user_phone = #{topicUserPhone,jdbcType=VARCHAR},
+      topic_last_reply_user_phone = #{topicLastReplyUserPhone,jdbcType=VARCHAR}
     where topic_id = #{topicId,jdbcType=INTEGER}
   </update>
 </mapper>
