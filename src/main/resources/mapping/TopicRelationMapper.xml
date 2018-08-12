@@ -18,6 +18,13 @@
     where user_phone = #{userPhone,jdbcType=VARCHAR}
       and topic_id = #{topicId,jdbcType=INTEGER}
   </select>
+  <select id="selectFavoriteTopicRelationList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from topic_relation
+    where user_phone = #{userPhone}
+    limit #{offset},#{limit}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.example.demo.model.TopicRelationKey">
     delete from topic_relation
     where user_phone = #{userPhone,jdbcType=VARCHAR}

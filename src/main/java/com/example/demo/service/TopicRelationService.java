@@ -1,5 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.model.TopicRelation;
+
+import java.util.List;
+
 public interface TopicRelationService {
 
     int favorite(String userPhone, int topicId);
@@ -13,5 +17,8 @@ public interface TopicRelationService {
     int like(String userPhone, int topicId);
 
     int unLike(String userPhone, int topicId);
+
+    TopicRelation selectTopicRelation(String userPhone, int topicId);
+
 
 }

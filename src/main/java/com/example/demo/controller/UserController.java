@@ -3,10 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.authorization.*;
 import com.example.demo.config.Constant;
 import com.example.demo.controller.response.State;
+import com.example.demo.controller.response.TopicBrief;
 import com.example.demo.controller.response.UserBrief;
 import com.example.demo.controller.response.UserDetail;
+import com.example.demo.model.Topic;
 import com.example.demo.model.User;
 import com.example.demo.service.RelationService;
+import com.example.demo.service.TopicRelationService;
+import com.example.demo.service.TopicService;
 import com.example.demo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +53,12 @@ public class UserController {
 
     @Autowired
     private RelationService relationService;
+
+    @Autowired
+    private TopicService topicService;
+
+    @Autowired
+    private TopicRelationService topicRelationService;
 
 
     // user info
@@ -220,6 +231,58 @@ public class UserController {
 
     }
 
+
+    @GetMapping(value = "/createdTopicList/{userPhone}")
+    public ResponseEntity<List<TopicBrief>> getUserCreatedTopicList(@PathVariable String userPhone, @RequestParam Map<String, String> body) {
+
+        Integer offset,limit;
+
+        try {
+            offset = Integer.parseInt(body.get("offset"));
+            limit = Integer.parseInt(body.get("limit"));
+        } catch (NumberFormatException e) {
+            offset = Constant.OFFSET_DEFAULT;
+            limit = Constant.LIMIT_DEFAULT;
+        }
+
+        User user = userService.getUser(userPhone);
+
+        List<Topic> topicList = topicService.getLimitUserCreatedTopics(userPhone, offset, limit);
+        List<TopicBrief> topicBriefList = new ArrayList<>();
+        for (Topic topic: topicList) {
+            TopicBrief topicBrief = new TopicBrief(topic);
+            topicBrief.setUser(new UserBrief(user));
+            topicBriefList.add(topicBrief);
+        }
+
+        return ResponseEntity.ok(topicBriefList);
+
+    }
+
+    @GetMapping(value = "/favoriteTopicList/{userPhone}")
+    public ResponseEntity<List<TopicBrief>> getUserFavoriteTopicList(@PathVariable String userPhone, @RequestParam Map<String, String> body) {
+        Integer offset,limit;
+
+        try {
+            offset = Integer.parseInt(body.get("offset"));
+            limit = Integer.parseInt(body.get("limit"));
+        } catch (NumberFormatException e) {
+            offset = Constant.OFFSET_DEFAULT;
+            limit = Constant.LIMIT_DEFAULT;
+        }
+
+
+        List<Topic> topicList = topicService.getLimitUserFavoriteTopics(userPhone, offset, limit);
+        List<TopicBrief> topicBriefList = new ArrayList<>();
+        for (Topic topic: topicList) {
+            TopicBrief topicBrief = new TopicBrief(topic);
+            User user = userService.getUser(topic.getTopicUserPhone());
+            topicBrief.setUser(new UserBrief(user));
+            topicBriefList.add(topicBrief);
+        }
+
+        return ResponseEntity.ok(topicBriefList);
+    }
 
 
 

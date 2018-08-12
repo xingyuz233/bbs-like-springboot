@@ -19,4 +19,7 @@ public interface TopicMapper {
     int updateByPrimaryKey(Topic record);
 
     List<Topic> selectLimitTopics(@Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    List<Topic> selectLimitUserTopics(@Param("userPhone") String userPhone, @Param("offset") Integer offset, @Param("limit") Integer limit);
+
 }

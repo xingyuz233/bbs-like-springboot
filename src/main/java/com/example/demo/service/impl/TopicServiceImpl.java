@@ -1,14 +1,18 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.mapper.TopicMapper;
+import com.example.demo.mapper.TopicRelationMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.Topic;
+import com.example.demo.model.TopicRelation;
 import com.example.demo.model.User;
 import com.example.demo.service.TopicService;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,25 +25,31 @@ public class TopicServiceImpl implements TopicService {
     @Autowired
     private TopicMapper topicMapper;
 
+    @Autowired
+    private TopicRelationMapper topicRelationMapper;
+
     @Override
     public int addTopic(Topic topic) {
+
+        @NotNull
         User user = userMapper.selectByPrimaryKey(topic.getTopicUserPhone());
-        if (user != null) {
-            user.setUserTopicsCount(user.getUserTopicsCount() + 1);
-            userMapper.updateByPrimaryKeySelective(user);
-            return topicMapper.insertSelective(topic);
-        }
-        return 0;
+        user.setUserTopicsCount(user.getUserTopicsCount() + 1);
+        userMapper.updateByPrimaryKeySelective(user);
+
+        return topicMapper.insertSelective(topic);
+
     }
 
     @Override
     public int deleteTopic(int topic_id) {
+
+        @NotNull
         Topic topic = topicMapper.selectByPrimaryKey(topic_id);
+        @NotNull
         User user = userMapper.selectByPrimaryKey(topic.getTopicUserPhone());
-        if (user != null) {
-            user.setUserTopicsCount(user.getUserTopicsCount() - 1);
-            userMapper.updateByPrimaryKeySelective(user);
-        }
+        user.setUserTopicsCount(user.getUserTopicsCount() - 1);
+        userMapper.updateByPrimaryKeySelective(user);
+
         return topicMapper.deleteByPrimaryKey(topic_id);
     }
 
@@ -58,6 +68,20 @@ public class TopicServiceImpl implements TopicService {
         return topicMapper.selectLimitTopics(offset, limit);
     }
 
+    @Override
+    public List<Topic> getLimitUserCreatedTopics(String userPhone, Integer offset, Integer limit) {
+        return topicMapper.selectLimitUserTopics(userPhone, offset, limit);
+    }
+    @Override
+    public List<Topic> getLimitUserFavoriteTopics(String userPhone, Integer offset, Integer limit) {
+        List<TopicRelation> topicRelationList = topicRelationMapper.selectFavoriteTopicRelationList(userPhone, offset, limit);
+
+        List<Topic> topicList = new ArrayList<>();
+        for (TopicRelation topicRelation: topicRelationList) {
+            topicList.add(topicMapper.selectByPrimaryKey(topicRelation.getTopicId()));
+        }
+        return topicList;
+    }
 
 
 }

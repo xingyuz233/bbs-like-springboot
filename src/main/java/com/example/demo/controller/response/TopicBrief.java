@@ -3,10 +3,14 @@ package com.example.demo.controller.response;
 import com.example.demo.model.Topic;
 import com.example.demo.model.User;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicBrief {
+public class TopicBrief implements Serializable {
     private int id;                         // 唯一 id
     private String title;                   // 标题
     private String created_at;              // 创建时间
@@ -147,11 +151,13 @@ public class TopicBrief {
     }
 
     public TopicBrief(Topic topic) {
-        this.id = 0;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+        this.id = topic.getTopicId();
         this.title = topic.getTopicTitle();
-        this.created_at = topic.getTopicPublishTime().toString();
-        this.updated_at = topic.getTopicModifyTime().toString();
-        this.replied_at = topic.getTopicLastReplyTime().toString();
+        this.created_at = df.format(topic.getTopicPublishTime());
+        this.updated_at = df.format(topic.getTopicModifyTime());
+        this.replied_at = topic.getTopicLastReplyTime() == null? null: df.format(topic.getTopicLastReplyTime());
         this.replies_count = topic.getTopicReplies();
         this.node_name = "";
         this.node_id = 0;

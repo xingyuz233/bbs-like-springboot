@@ -3,15 +3,14 @@ package com.example.demo.service.impl;
 import com.example.demo.mapper.TopicMapper;
 import com.example.demo.mapper.TopicRelationMapper;
 import com.example.demo.mapper.UserMapper;
-import com.example.demo.model.Topic;
-import com.example.demo.model.TopicRelation;
-import com.example.demo.model.TopicRelationKey;
-import com.example.demo.model.User;
+import com.example.demo.model.*;
 import com.example.demo.service.TopicRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service(value = "topicRelationService")
 public class TopicRelationServiceImpl implements TopicRelationService {
@@ -180,4 +179,15 @@ public class TopicRelationServiceImpl implements TopicRelationService {
         }
         return 0;
     }
+
+    @Override
+    public TopicRelation selectTopicRelation(String userPhone, int topicId) {
+        TopicRelationKey topicRelationKey = new TopicRelationKey();
+        topicRelationKey.setUserPhone(userPhone);
+        topicRelationKey.setTopicId(topicId);
+        return topicRelationMapper.selectByPrimaryKey(topicRelationKey);
+    }
+
+
+
 }

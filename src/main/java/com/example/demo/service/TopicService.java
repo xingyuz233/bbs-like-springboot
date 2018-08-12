@@ -16,5 +16,8 @@ public interface TopicService {
 
     List<Topic> getLimitTopics(Integer offset, Integer limit);
 
+    List<Topic> getLimitUserCreatedTopics(String userPhone, Integer offset, Integer limit);
+
+    List<Topic> getLimitUserFavoriteTopics(String userPhone, Integer offset, Integer limit);
 
 }

@@ -45,6 +45,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.route.auth.register}")
     private String registerPath;
 
+    @Value("${jwt.route.auth.refresh}")
+    private String refreshPath;
+
+    @Value("${jwt.route.topic.list}")
+    private String topicListPath;
+
+    @Value("${jwt.route.topic.id}")
+    private String topicIdPath;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -110,6 +119,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .ignoring()
             .antMatchers(
                 HttpMethod.GET,
+                    topicListPath,
+                    topicIdPath,
                 "/",
                 "/*.html",
                 "/favicon.ico",
