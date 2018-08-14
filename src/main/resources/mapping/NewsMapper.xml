@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.model.News">
+    <id column="news_id" jdbcType="INTEGER" property="newsId" />
+    <result column="news_title" jdbcType="VARCHAR" property="newsTitle" />
+    <result column="news_address" jdbcType="VARCHAR" property="newsAddress" />
+    <result column="news_publish_time" jdbcType="TIMESTAMP" property="newsPublishTime" />
+    <result column="news_modify_time" jdbcType="TIMESTAMP" property="newsModifyTime" />
+    <result column="news_user_phone" jdbcType="VARCHAR" property="newsUserPhone" />
+    <result column="news_last_reply_user_phone" jdbcType="VARCHAR" property="newsLastReplyUserPhone" />
+    <result column="news_last_reply_time" jdbcType="TIMESTAMP" property="newsLastReplyTime" />
+    <result column="news_reply_count" jdbcType="INTEGER" property="newsReplyCount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    news_id, news_title, news_address, news_publish_time, news_modify_time, news_user_phone, 
+    news_last_reply_user_phone, news_last_reply_time, news_reply_count
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </select>
+  <select id="selectLimitNewsList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from news
+    limit #{offset},#{limit}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.model.News">
+    insert into news (news_id, news_title, news_address, 
+      news_publish_time, news_modify_time, news_user_phone, 
+      news_last_reply_user_phone, news_last_reply_time, 
+      news_reply_count)
+    values (#{newsId,jdbcType=INTEGER}, #{newsTitle,jdbcType=VARCHAR}, #{newsAddress,jdbcType=VARCHAR}, 
+      #{newsPublishTime,jdbcType=TIMESTAMP}, #{newsModifyTime,jdbcType=TIMESTAMP}, #{newsUserPhone,jdbcType=VARCHAR}, 
+      #{newsLastReplyUserPhone,jdbcType=VARCHAR}, #{newsLastReplyTime,jdbcType=TIMESTAMP}, 
+      #{newsReplyCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.demo.model.News">
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        news_id,
+      </if>
+      <if test="newsTitle != null">
+        news_title,
+      </if>
+      <if test="newsAddress != null">
+        news_address,
+      </if>
+      <if test="newsPublishTime != null">
+        news_publish_time,
+      </if>
+      <if test="newsModifyTime != null">
+        news_modify_time,
+      </if>
+      <if test="newsUserPhone != null">
+        news_user_phone,
+      </if>
+      <if test="newsLastReplyUserPhone != null">
+        news_last_reply_user_phone,
+      </if>
+      <if test="newsLastReplyTime != null">
+        news_last_reply_time,
+      </if>
+      <if test="newsReplyCount != null">
+        news_reply_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null">
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAddress != null">
+        #{newsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="newsPublishTime != null">
+        #{newsPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsModifyTime != null">
+        #{newsModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsUserPhone != null">
+        #{newsUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="newsLastReplyUserPhone != null">
+        #{newsLastReplyUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="newsLastReplyTime != null">
+        #{newsLastReplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsReplyCount != null">
+        #{newsReplyCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.model.News">
+    update news
+    <set>
+      <if test="newsTitle != null">
+        news_title = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAddress != null">
+        news_address = #{newsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="newsPublishTime != null">
+        news_publish_time = #{newsPublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsModifyTime != null">
+        news_modify_time = #{newsModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsUserPhone != null">
+        news_user_phone = #{newsUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="newsLastReplyUserPhone != null">
+        news_last_reply_user_phone = #{newsLastReplyUserPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="newsLastReplyTime != null">
+        news_last_reply_time = #{newsLastReplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsReplyCount != null">
+        news_reply_count = #{newsReplyCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.model.News">
+    update news
+    set news_title = #{newsTitle,jdbcType=VARCHAR},
+      news_address = #{newsAddress,jdbcType=VARCHAR},
+      news_publish_time = #{newsPublishTime,jdbcType=TIMESTAMP},
+      news_modify_time = #{newsModifyTime,jdbcType=TIMESTAMP},
+      news_user_phone = #{newsUserPhone,jdbcType=VARCHAR},
+      news_last_reply_user_phone = #{newsLastReplyUserPhone,jdbcType=VARCHAR},
+      news_last_reply_time = #{newsLastReplyTime,jdbcType=TIMESTAMP},
+      news_reply_count = #{newsReplyCount,jdbcType=INTEGER}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+</mapper>

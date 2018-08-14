@@ -31,7 +31,7 @@ mybatis:
 jwt:
   header: "Authorization"
   secret: "mySecret"
-  expiration: 604800
+  expiration: 60480000
   type: "Bearer"
   route:
     auth:
@@ -41,7 +41,10 @@ jwt:
     topic:
       list: "/topic/list"
       id: "/topic/id"
-
+    news:
+      list: "/news/list"
+    user:
+      list: "/user/list"
 
 
 ##pagehelper分页插件

@@ -23,6 +23,8 @@ public class User {
 
     private Integer userFavoritesCount;
 
+    private String userAvatarUrl;
+
     public String getUserPhone() {
         return userPhone;
     }
@@ -57,6 +59,10 @@ public class User {
 
     public Date getUserCreatedDate() {
         return userCreatedDate;
+    }
+
+    public String getUserAvatarUrl() {
+        return userAvatarUrl;
     }
 
     public void setUserCreatedDate(Date userCreatedDate) {
@@ -101,5 +107,9 @@ public class User {
 
     public void setUserFavoritesCount(Integer userFavoritesCount) {
         this.userFavoritesCount = userFavoritesCount;
+    }
+
+    public void setUserAvatarUrl(String userAvatarUrl) {
+        this.userAvatarUrl = userAvatarUrl;
     }
 }

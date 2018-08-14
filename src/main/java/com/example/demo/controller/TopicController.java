@@ -127,7 +127,7 @@ public class TopicController {
             TopicDetail topicDetail = new TopicDetail(topic);
             topicDetail.setUser(new UserBrief(user));
 
-            if (Authorization != null) {
+            if (Authorization != null && Authorization.length() > 7) {
                 String token = Authorization.substring(7);
                 String phone = jwtTokenUtil.getUsernameFromToken(token);
                 TopicRelation topicRelation = topicRelationService.selectTopicRelation(phone,id);

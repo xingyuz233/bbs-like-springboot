@@ -16,7 +16,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.annotation.MultipartConfig;
+import java.io.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Map;
@@ -50,7 +53,7 @@ public class AuthController {
 
     /***
      *
-     * @param body
+     * @param userPhone,
      * 接收键
      * userPhone
      * userName
@@ -58,13 +61,9 @@ public class AuthController {
      * @return token
      */
     @PostMapping(value = "/register")
-    public ResponseEntity<?> register(@RequestParam Map<String, String> body) {
-        @NotNull
-        String userPhone = body.get("userPhone");
-        @NotNull
-        String userName = body.get("userName");
-        @NotNull
-        String userPassword = body.get("userPassword");
+    public ResponseEntity<?> register(@RequestParam("userPhone") String userPhone, @RequestParam("userName") String userName,
+                                      @RequestParam("userPassword") String userPassword, @RequestPart("avatar") MultipartFile file) {
+
 
         User user = new User();
         user.setUserPhone(userPhone);
@@ -72,6 +71,7 @@ public class AuthController {
         user.setUserPassword(userPassword);
         user.setUserCreatedDate(Date.valueOf(LocalDate.now()));
         user.setUserLastPasswordResetDate(Date.valueOf(LocalDate.now()));
+        user.setUserAvatarUrl("/avatar/"+ userPhone + "/" + file.getOriginalFilename());
 
         logger.info("user/register request received!", user.toString());
 
@@ -83,6 +83,36 @@ public class AuthController {
         int success = userService.addUser(user);
         logger.info("user/register adduser success status: " + success);
         if (success == 1) {
+            try {
+                /*
+                 * 这段代码执行完毕之后，图片上传到了工程的跟路径； 大家自己扩散下思维，如果我们想把图片上传到
+                 * d:/files大家是否能实现呢？ 等等;
+                 * 这里只是简单一个例子,请自行参考，融入到实际中可能需要大家自己做一些思考，比如： 1、文件路径； 2、文件名；
+                 * 3、文件格式; 4、文件大小的限制;
+                 */
+                File dir = new File("./avatar/"+userPhone);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                File newFile = new File(dir, file.getOriginalFilename());
+                if (!newFile.exists()) {
+                    newFile.createNewFile();
+                }
+                BufferedOutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(newFile));
+                System.out.println(file.getOriginalFilename());
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().body(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().body(null);
+            }
+
+
             final UserDetails userDetails = JwtUserFactory.create(user);
             final String token = jwtTokenUtil.generateToken(userDetails);
             return ResponseEntity.ok(jwtTokenUtil.getTokenResponse(token));

@@ -54,6 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.route.topic.id}")
     private String topicIdPath;
 
+    @Value("${jwt.route.news.list}")
+    private String newsListPath;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -119,14 +122,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .ignoring()
             .antMatchers(
                 HttpMethod.GET,
-                    topicListPath,
-                    topicIdPath,
+
+                "/user/*",
+                "/topic/*",
+                "/news/*",
+
                 "/",
                 "/*.html",
                 "/favicon.ico",
                 "/**/*.html",
                 "/**/*.css",
-                "/**/*.js"
+                "/**/*.js",
+                    "/**/**/*.jpg"
             )
 
             // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)

@@ -159,7 +159,7 @@ public class TopicBrief implements Serializable {
         this.updated_at = df.format(topic.getTopicModifyTime());
         this.replied_at = topic.getTopicLastReplyTime() == null? null: df.format(topic.getTopicLastReplyTime());
         this.replies_count = topic.getTopicReplies();
-        this.node_name = "";
+        this.node_name = "Android";
         this.node_id = 0;
         this.last_reply_user_id = 0;
         this.last_reply_user_login = topic.getTopicUserPhone();

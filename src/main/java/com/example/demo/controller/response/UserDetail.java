@@ -198,6 +198,7 @@ public class UserDetail implements Serializable {
         this.login = user.getUserPhone();
         this.topics_count = user.getUserTopicsCount();
         this.replies_count = user.getUserRepliesCount();
+        this.avatar_url = user.getUserAvatarUrl();
     }
 
     public static List<UserDetail> getUserDetailList(List<User> userList) {

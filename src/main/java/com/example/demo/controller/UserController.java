@@ -86,6 +86,9 @@ public class UserController {
      */
     @GetMapping(value = "/me")
     public ResponseEntity<UserDetail> getMe(@RequestHeader String Authorization) {
+        if (Authorization == null || Authorization.length() <= 7) {
+            return ResponseEntity.badRequest().body(null);
+        }
         final String token = Authorization.substring(7);
         String userPhone = jwtTokenUtil.getUsernameFromToken(token);
         User user = userService.getUser(userPhone);

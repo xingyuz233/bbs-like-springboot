@@ -50,6 +50,7 @@ public class UserBrief implements Serializable {
         this.id = 0;
         this.login = user.getUserPhone();
         this.name = user.getUserName();
+        this.avatar_url = user.getUserAvatarUrl();
     }
 
     public static List<UserBrief> getUserBriefList(List<User> userList) {
